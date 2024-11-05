@@ -7,6 +7,7 @@ type Map[K comparable, V comparable] struct {
 
 	keys   []K
 	values []V
+	mapped map[K]V
 }
 
 func NewMap[K comparable, V comparable]() *Map[K, V] {
@@ -17,6 +18,7 @@ func NewMapFrom[K comparable, V comparable](val map[K]V) *Map[K, V] {
 	keys := []K{}
 	values := []V{}
 	keyIndex := map[K]int{}
+	mapped := map[K]V{}
 
 	i := 0
 
@@ -24,6 +26,7 @@ func NewMapFrom[K comparable, V comparable](val map[K]V) *Map[K, V] {
 		keyIndex[k] = i
 		keys = append(keys, k)
 		values = append(values, v)
+		mapped[k] = v
 
 		i++
 	}
@@ -32,6 +35,7 @@ func NewMapFrom[K comparable, V comparable](val map[K]V) *Map[K, V] {
 		keyIndex: keyIndex,
 		keys:     keys,
 		values:   values,
+		mapped:   mapped,
 	}
 }
 
@@ -62,12 +66,14 @@ func (m *Map[K, V]) Set(key K, val V) {
 		m.keyIndex[key] = len(m.values)
 		m.keys = append(m.keys, key)
 		m.values = append(m.values, val)
+		m.mapped[key] = val
 
 		return
 	}
 
 	m.keys[id] = key
 	m.values[id] = val
+	m.mapped[key] = val
 }
 
 func (m *Map[K, V]) Len() int {
@@ -120,6 +126,7 @@ func (m *Map[K, V]) Delete(key K) {
 	keys := m.keys[0:id:id]
 
 	delete(m.keyIndex, deletingKey)
+	delete(m.mapped, deletingKey)
 
 	for i := id + 1; i < len(m.values); i++ {
 		values = append(values, m.values[i])
@@ -130,6 +137,10 @@ func (m *Map[K, V]) Delete(key K) {
 
 	m.values = values
 	m.keys = keys
+}
+
+func (m *Map[K, V]) ToMap() map[K]V {
+	return m.mapped
 }
 
 func (m *Map[K, V]) IsEmpty() bool {
@@ -148,6 +159,7 @@ func (m *Map[K, V]) DeleteMany(delkeys []K) {
 			ids = append(ids, id)
 
 			delete(m.keyIndex, key)
+			delete(m.mapped, key)
 		}
 	}
 
