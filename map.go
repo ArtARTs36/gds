@@ -184,3 +184,26 @@ func (m *Map[K, V]) DeleteMany(delkeys []K) {
 	m.values = values
 	m.keys = keys
 }
+
+func (m *Map[K, V]) Keep(keys ...K) {
+	newMap := m.CloneAndKeep(keys...)
+
+	m.keyIndex = newMap.keyIndex
+	m.keys = newMap.keys
+	m.values = newMap.values
+	m.mapped = newMap.mapped
+}
+
+func (m *Map[K, V]) CloneAndKeep(keys ...K) *Map[K, V] {
+	newMap := NewMap[K, V]()
+
+	for _, key := range keys {
+		v, has := m.Get(key)
+		if !has {
+			continue
+		}
+		newMap.Set(key, v)
+	}
+
+	return newMap
+}
