@@ -1,9 +1,11 @@
 package gds
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMap_List(t *testing.T) {
@@ -191,5 +193,23 @@ func TestMap_DeleteMany(t *testing.T) {
 		m.DeleteMany([]string{"c"})
 
 		assert.Equal(t, []string{"1", "5"}, m.List())
+	})
+}
+
+func TestMap_Get(t *testing.T) {
+	t.Run("get empty string", func(t *testing.T) {
+		m := NewMap[string, string]()
+		got, ok := m.Get("a")
+		require.False(t, ok)
+
+		assert.Equal(t, "", got)
+	})
+
+	t.Run("get nil struct", func(t *testing.T) {
+		m := NewMap[string, *os.File]()
+		got, ok := m.Get("a")
+		require.False(t, ok)
+
+		assert.Equal(t, (*os.File)(nil), got)
 	})
 }

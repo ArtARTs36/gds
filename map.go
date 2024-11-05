@@ -8,6 +8,8 @@ type Map[K comparable, V comparable] struct {
 	keys   []K
 	values []V
 	mapped map[K]V
+
+	nilVal V
 }
 
 func NewMap[K comparable, V comparable]() *Map[K, V] {
@@ -83,7 +85,7 @@ func (m *Map[K, V]) Len() int {
 func (m *Map[K, V]) Get(key K) (V, bool) {
 	id, has := m.keyIndex[key]
 	if !has {
-		return (any(0)).(V), false
+		return m.nilVal, false
 	}
 
 	return m.values[id], true
