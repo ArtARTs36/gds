@@ -38,6 +38,10 @@ func (s *Set[T]) List() []T {
 }
 
 func (s *Set[T]) IsEmpty() bool {
+	return len(s.list) == 0
+}
+
+func (s *Set[T]) IsNotEmpty() bool {
 	return len(s.list) > 0
 }
 

@@ -149,6 +149,10 @@ func (m *Map[K, V]) IsEmpty() bool {
 	return len(m.values) == 0
 }
 
+func (m *Map[K, V]) IsNotEmpty() bool {
+	return len(m.values) > 0
+}
+
 func (m *Map[K, V]) DeleteMany(delkeys []K) {
 	if m.IsEmpty() || len(delkeys) == 0 {
 		return
