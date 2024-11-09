@@ -19,13 +19,13 @@ type SplitWord struct {
 	SeparatorAfter string
 }
 
-func NewString(val string) String {
-	return String{
+func NewString(val string) *String {
+	return &String{
 		Value: val,
 	}
 }
 
-func NewEmptyString() String {
+func NewEmptyString() *String {
 	return NewString("")
 }
 
@@ -56,15 +56,15 @@ func (s *String) Replace(old, new string) string {
 	return strings.ReplaceAll(s.Value, old, new)
 }
 
-func (s *String) Pascal() String {
+func (s *String) Pascal() *String {
 	return NewString(strcase.ToCamel(s.Value))
 }
 
-func (s *String) Camel() String {
+func (s *String) Camel() *String {
 	return NewString(strcase.ToLowerCamel(s.Value))
 }
 
-func (s *String) Snake() String {
+func (s *String) Snake() *String {
 	return NewString(strcase.ToSnake(s.Value))
 }
 
@@ -80,11 +80,11 @@ func (s *String) IsNotEmpty() bool {
 	return s.Len() != 0
 }
 
-func (s *String) Singular() String {
+func (s *String) Singular() *String {
 	return NewString(inflection.Singular(s.Value))
 }
 
-func (s *String) Plural() String {
+func (s *String) Plural() *String {
 	return NewString(inflection.Plural(s.Value))
 }
 
@@ -151,7 +151,7 @@ func (s *String) SplitWords() []*SplitWord {
 	return words
 }
 
-func (s *String) FixAbbreviations(abbrSet map[string]bool) String {
+func (s *String) FixAbbreviations(abbrSet map[string]bool) *String {
 	split := s.SplitWords()
 	words := make([]string, 0, len(split))
 
@@ -168,7 +168,7 @@ func (s *String) FixAbbreviations(abbrSet map[string]bool) String {
 	return NewString(strings.Join(words, ""))
 }
 
-func (s *String) PluralFixAbbreviations(abbrSet map[string]string) String {
+func (s *String) PluralFixAbbreviations(abbrSet map[string]string) *String {
 	split := s.SplitWords()
 	words := make([]string, 0, len(split))
 
@@ -193,11 +193,11 @@ func (s *String) PluralFixAbbreviations(abbrSet map[string]string) String {
 	return NewString(strings.Join(words, ""))
 }
 
-func (s *String) Lower() String {
+func (s *String) Lower() *String {
 	return NewString(strings.ToLower(s.Value))
 }
 
-func (s *String) Upper() String {
+func (s *String) Upper() *String {
 	return NewString(strings.ToUpper(s.Value))
 }
 
@@ -211,7 +211,7 @@ func (s *String) Equal(strs ...string) bool {
 	return false
 }
 
-func (s *String) FirstLine() String {
+func (s *String) FirstLine() *String {
 	lines := strings.Split(s.Value, "\n")
 	if len(lines) == 0 {
 		return NewString("")
@@ -220,7 +220,7 @@ func (s *String) FirstLine() String {
 	return NewString(lines[0])
 }
 
-func (s *String) TrimPrefix(cutset string) String {
+func (s *String) TrimPrefix(cutset string) *String {
 	return NewString(strings.TrimPrefix(s.Value, cutset))
 }
 
@@ -230,10 +230,10 @@ func (s *String) TrimSpaces() *String {
 	}
 }
 
-func (s *String) Prepend(prefix string) String {
+func (s *String) Prepend(prefix string) *String {
 	return NewString(fmt.Sprintf("%s%s", prefix, s.Value))
 }
 
-func (s *String) Append(suffix string) String {
+func (s *String) Append(suffix string) *String {
 	return NewString(fmt.Sprintf("%s%s", s.Value, suffix))
 }
