@@ -41,6 +41,13 @@ func NewMapFrom[K comparable, V comparable](val map[K]V) *Map[K, V] {
 	}
 }
 
+func (m *Map[K, V]) First() V {
+	if m.IsEmpty() {
+		return m.nilVal
+	}
+	return m.values[0]
+}
+
 func (m *Map[K, V]) Clone() *Map[K, V] {
 	return &Map[K, V]{
 		keyIndex: m.keyIndex,

@@ -8,6 +8,8 @@ import (
 type Set[T comparable] struct {
 	set  map[T]bool
 	list []T
+
+	nilVal T
 }
 
 func NewSet[T comparable](values ...T) *Set[T] {
@@ -21,6 +23,13 @@ func NewSet[T comparable](values ...T) *Set[T] {
 	}
 
 	return set
+}
+
+func (s *Set[T]) First() T {
+	if s.IsEmpty() {
+		return s.nilVal
+	}
+	return s.list[0]
 }
 
 func (s *Set[T]) Add(val T) {
