@@ -237,3 +237,7 @@ func (s *String) Prepend(prefix string) *String {
 func (s *String) Append(suffix string) *String {
 	return NewString(fmt.Sprintf("%s%s", s.Value, suffix))
 }
+
+func (s *String) Wrap(wrapper string) *String {
+	return NewString(fmt.Sprintf("%s%s%s", wrapper, s.Value, wrapper))
+}
