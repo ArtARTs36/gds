@@ -1,6 +1,7 @@
 package gds
 
 import (
+	"fmt"
 	"slices"
 	"strings"
 )
@@ -50,4 +51,16 @@ func (s *Strings) IsNotEmpty() bool {
 
 func (s *Strings) List() []string {
 	return s.items
+}
+
+func (s *Strings) Wrap(wrapper string) *Strings {
+	strs := &Strings{
+		items: make([]string, len(s.items)),
+	}
+
+	for i, str := range s.items {
+		strs.items[i] = fmt.Sprintf("%s%s%s", wrapper, str, wrapper)
+	}
+
+	return strs
 }
