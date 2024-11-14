@@ -1,8 +1,11 @@
 package gds
 
-import "slices"
+import (
+	"reflect"
+	"slices"
+)
 
-type Map[K comparable, V comparable] struct {
+type Map[K comparable, V any] struct {
 	keyIndex map[K]int
 
 	keys   []K
@@ -12,11 +15,11 @@ type Map[K comparable, V comparable] struct {
 	nilVal V
 }
 
-func NewMap[K comparable, V comparable]() *Map[K, V] {
+func NewMap[K comparable, V any]() *Map[K, V] {
 	return NewMapFrom[K, V](map[K]V{})
 }
 
-func NewMapFrom[K comparable, V comparable](val map[K]V) *Map[K, V] {
+func NewMapFrom[K comparable, V any](val map[K]V) *Map[K, V] {
 	keys := []K{}
 	values := []V{}
 	keyIndex := map[K]int{}
@@ -109,7 +112,7 @@ func (m *Map[K, V]) Equal(that *Map[K, V]) bool {
 			return false
 		}
 
-		if v != m.values[id] {
+		if !reflect.DeepEqual(v, m.values[id]) {
 			return false
 		}
 	}

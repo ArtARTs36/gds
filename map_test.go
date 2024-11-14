@@ -213,3 +213,31 @@ func TestMap_Get(t *testing.T) {
 		assert.Equal(t, (*os.File)(nil), got)
 	})
 }
+
+func TestMap_Equal(t *testing.T) {
+	t.Run("equal string map", func(t *testing.T) {
+		m1 := NewMap[string, string]()
+		m2 := NewMap[string, string]()
+
+		m1.Set("1", "3")
+		m1.Set("2", "4")
+
+		m2.Set("2", "4")
+		m2.Set("1", "3")
+
+		assert.True(t, m1.Equal(m2))
+	})
+
+	t.Run("equal []string map", func(t *testing.T) {
+		m1 := NewMap[string, []string]()
+		m2 := NewMap[string, []string]()
+
+		m1.Set("1", []string{"5", "6"})
+		m1.Set("2", []string{"7", "8"})
+
+		m2.Set("2", []string{"7", "8"})
+		m2.Set("1", []string{"5", "6"})
+
+		assert.True(t, m1.Equal(m2))
+	})
+}
