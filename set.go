@@ -1,6 +1,8 @@
 package gds
 
 import (
+	"fmt"
+	"gopkg.in/yaml.v3"
 	"maps"
 	"slices"
 )
@@ -100,4 +102,26 @@ func (s *Set[T]) Equal(that *Set[T]) bool {
 	}
 
 	return true
+}
+
+func (s *Set[T]) UnmarshalYAML(n *yaml.Node) error {
+	if n.Kind != yaml.SequenceNode {
+		return fmt.Errorf("yaml must contain a sequence node, has %v", n.Kind)
+	}
+
+	if s.set == nil {
+		s.set = map[T]bool{}
+	}
+
+	for _, item := range n.Content {
+		var val T
+
+		if err := item.Decode(&val); err != nil {
+			return err
+		}
+
+		s.Add(val)
+	}
+
+	return nil
 }
