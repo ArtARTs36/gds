@@ -241,3 +241,15 @@ func (s *String) Append(suffix string) *String {
 func (s *String) Wrap(wrapper string) *String {
 	return NewString(fmt.Sprintf("%s%s%s", wrapper, s.Value, wrapper))
 }
+
+func (s *String) WithSuffix(suffix string) *String {
+	if s.HasSuffix(suffix) {
+		return s
+	}
+
+	return s.Append(suffix)
+}
+
+func (s *String) HasSuffix(suffix string) bool {
+	return strings.HasSuffix(s.Value, suffix)
+}

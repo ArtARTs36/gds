@@ -261,3 +261,33 @@ func TestPluralStringFixAbbreviations(t *testing.T) {
 		})
 	}
 }
+
+func TestString_WithSuffix(t *testing.T) {
+	tests := []struct {
+		Title    string
+		Input    string
+		Suffix   string
+		Expected string
+	}{
+		{
+			Title:    "String already has suffix",
+			Input:    "abcd",
+			Suffix:   "d",
+			Expected: "abcd",
+		},
+		{
+			Title:    "Append string",
+			Input:    "abc",
+			Suffix:   "d",
+			Expected: "abcd",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.Title, func(t *testing.T) {
+			str := NewString(test.Input)
+
+			assert.Equal(t, test.Expected, str.WithSuffix(test.Suffix).Value)
+		})
+	}
+}
