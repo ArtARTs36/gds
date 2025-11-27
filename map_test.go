@@ -1,6 +1,7 @@
 package gds
 
 import (
+	"gopkg.in/yaml.v3"
 	"os"
 	"testing"
 
@@ -240,4 +241,23 @@ func TestMap_Equal(t *testing.T) {
 
 		assert.True(t, m1.Equal(m2))
 	})
+}
+
+func TestMap_UnmarshalYAML(t *testing.T) {
+	var cfg struct {
+		Values Map[string, int] `yaml:"values"`
+	}
+
+	err := yaml.Unmarshal([]byte(`values:
+  k1: 5
+  k2: 6
+`), &cfg)
+
+	expected := NewMap[string, int]()
+
+	expected.Set("k1", 5)
+	expected.Set("k2", 6)
+
+	require.NoError(t, err)
+	assert.Equal(t, *expected, cfg.Values)
 }

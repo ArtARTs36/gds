@@ -52,8 +52,8 @@ func (s *String) String() string {
 	return s.Value
 }
 
-func (s *String) Replace(old, new string) string {
-	return strings.ReplaceAll(s.Value, old, new)
+func (s *String) Replace(oldVal, newVal string) string {
+	return strings.ReplaceAll(s.Value, oldVal, newVal)
 }
 
 func (s *String) Pascal() *String {

@@ -1,6 +1,8 @@
 package gds
 
 import (
+	"fmt"
+	"gopkg.in/yaml.v3"
 	"reflect"
 	"slices"
 )
@@ -122,7 +124,10 @@ func (m *Map[K, V]) Equal(that *Map[K, V]) bool {
 
 func (m *Map[K, V]) Walk(callback func(key K, val V) bool) {
 	for k, id := range m.keyIndex {
-		callback(k, m.values[id])
+		continueWalk := callback(k, m.values[id])
+		if !continueWalk {
+			return
+		}
 	}
 }
 
@@ -222,4 +227,37 @@ func (m *Map[K, V]) CloneAndKeep(keys ...K) *Map[K, V] {
 	}
 
 	return newMap
+}
+
+func (m *Map[K, V]) UnmarshalYAML(n *yaml.Node) error {
+	if n.Kind != yaml.MappingNode {
+		return fmt.Errorf("yaml must contain a mapping node, has %v", n.Kind)
+	}
+
+	if m.mapped == nil {
+		m.mapped = make(map[K]V)
+		m.keyIndex = make(map[K]int)
+		m.keys = make([]K, 0)
+	}
+
+	for i := 0; i < len(n.Content); i += 2 {
+		var (
+			key   K
+			value V
+		)
+
+		err := yaml.Unmarshal([]byte(n.Content[i].Value), &key)
+		if err != nil {
+			return fmt.Errorf("unmarshal key: %w", err)
+		}
+
+		err = yaml.Unmarshal([]byte(n.Content[i+1].Value), &value)
+		if err != nil {
+			return fmt.Errorf("unmarshal value: %w", err)
+		}
+
+		m.Set(key, value)
+	}
+
+	return nil
 }
