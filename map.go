@@ -2,9 +2,10 @@ package gds
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v3"
 	"reflect"
 	"slices"
+
+	"go.yaml.in/yaml/v3"
 )
 
 type Map[K comparable, V any] struct {
